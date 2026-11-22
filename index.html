@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071a13">
+  <meta name="description" content="Track your Microsoft Rewards points toward your Xbox gift card goal.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Rewards Tracker</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <div><div class="eyebrow">MICROSOFT REWARDS</div><h1>Rewards Tracker</h1></div>
+      </div>
+      <button id="installBtn" class="install-btn" hidden aria-label="Install app"><span>↓</span> Install</button>
+    </header>
+
+    <main>
+      <section class="hero-card">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow light">YOUR BALANCE</div>
+            <div class="balance-line"><span id="balance">1,191</span><span class="points-label">PTS</span></div>
+          </div>
+          <div class="xbox-chip"><span class="xbox-mark">X</span><span>$100 XBOX<br>GIFT CARD</span></div>
+        </div>
+        <div class="progress-meta"><span>Progress to your goal</span><strong id="percent">2.2%</strong></div>
+        <div class="progress-track" role="progressbar" aria-label="Progress toward target" aria-valuemin="0" aria-valuemax="100" aria-valuenow="2.2" id="progressBar"><div id="progressFill"></div></div>
+        <div class="goal-numbers"><span><strong id="target">55,000</strong><small>TARGET</small></span><span class="remaining"><strong id="remaining">53,809</strong><small>POINTS TO GO</small></span></div>
+      </section>
+
+      <section class="stats-grid" aria-label="Daily statistics">
+        <article class="stat-card">
+          <div class="stat-icon">↗</div><div class="stat-label">TODAY'S EARNINGS</div>
+          <div class="stat-value"><span id="todayEarned">0</span><small>pts</small></div>
+          <div class="stat-foot" id="dailyStatus">Let's get started</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon">◷</div><div class="stat-label">EST. TIME LEFT</div>
+          <div class="stat-value" id="daysEstimate">266<small> days</small></div>
+          <div class="stat-foot" id="estimateFoot">At your daily target</div>
+        </article>
+      </section>
+
+      <section class="section-card goal-card">
+        <div class="section-heading">
+          <div><div class="eyebrow">DAILY ROUTINE</div><h2>Daily goal</h2></div>
+          <label class="switch" aria-label="Enable daily goal"><input id="goalToggle" type="checkbox" checked><span class="switch-track"></span></label>
+        </div>
+        <div class="daily-progress-row"><span>Today's progress</span><strong id="dailyProgressText">0 / 203 pts</strong></div>
+        <div class="progress-track slim"><div id="dailyProgressFill"></div></div>
+        <div class="goal-settings">
+          <label for="dailyTargetInput">Daily target</label>
+          <div class="input-with-action"><input id="dailyTargetInput" type="number" min="1" max="1000000" value="203" inputmode="numeric"><span>pts / day</span><button id="saveDailyTarget" class="mini-btn">Save</button></div>
+        </div>
+        <p class="muted-note" id="goalNote">Your daily target helps estimate when you'll reach your gift card.</p>
+      </section>
+
+      <section class="section-card">
+        <div class="section-heading"><div><div class="eyebrow">UPDATE YOUR POINTS</div><h2>Quick actions</h2></div></div>
+        <div class="action-grid">
+          <button class="action-tile primary-action" id="addOpen"><span class="action-symbol">＋</span><span><b>Add points</b><small>Log today's earnings</small></span></button>
+          <button class="action-tile" id="setOpen"><span class="action-symbol">✎</span><span><b>Set balance</b><small>Enter your current total</small></span></button>
+        </div>
+        <div class="inline-target">
+          <label for="targetInput">Gift card target</label>
+          <div class="input-with-action"><input id="targetInput" type="number" min="1" max="100000000" value="55000" inputmode="numeric"><span>pts</span><button id="saveTarget" class="mini-btn">Update</button></div>
+        </div>
+      </section>
+
+      <section class="section-card history-card">
+        <div class="section-heading"><div><div class="eyebrow">YOUR ACTIVITY</div><h2>History</h2></div><button id="clearHistory" class="text-btn">Clear history</button></div>
+        <div id="historyList" class="history-list"><div class="empty-state">Your point activity will appear here.</div></div>
+      </section>
+      <footer><span class="footer-dot"></span> Saved on this device · Works offline</footer>
+    </main>
+  </div>
+
+  <dialog id="addDialog" class="modal">
+    <form method="dialog" id="addForm">
+      <div class="modal-head"><div><div class="eyebrow">NEW TRANSACTION</div><h2>Add earned points</h2></div><button class="close-btn" value="cancel" aria-label="Close">×</button></div>
+      <label for="addAmount">Points earned</label><input id="addAmount" type="number" min="1" max="1000000" placeholder="e.g. 50" required inputmode="numeric">
+      <label for="addDescription">Note <span class="optional">(optional)</span></label><input id="addDescription" type="text" maxlength="60" placeholder="Daily set, searches, etc.">
+      <button class="submit-btn" id="addSubmit" value="default">Add points</button>
+    </form>
+  </dialog>
+
+  <dialog id="setDialog" class="modal">
+    <form method="dialog" id="setForm">
+      <div class="modal-head"><div><div class="eyebrow">MANUAL UPDATE</div><h2>Set total balance</h2></div><button class="close-btn" value="cancel" aria-label="Close">×</button></div>
+      <label for="setAmount">Current total points</label><input id="setAmount" type="number" min="0" max="100000000" required inputmode="numeric">
+      <p class="muted-note">This records a balance adjustment. It won't count as today's earned points.</p>
+      <button class="submit-btn" value="default">Save balance</button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
